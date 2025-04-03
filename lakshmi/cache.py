@@ -84,7 +84,6 @@ def set_force_refresh(v):
     Args:
         v: Boolean representing if cached values should be re-generated.
     """
-    global _ctx
     _ctx[_FORCE_STR] = v
     _ctx[_FORCED_FILES_STR] = set()
 
@@ -101,7 +100,6 @@ def set_cache_miss_func(f):
         this function is called periodically when using prefetch to fetch
         multiple values in parallel.
     """
-    global _ctx
     if f:
         _ctx[_MISS_FUNC_STR] = f
     else:
@@ -119,7 +117,6 @@ def set_cache_dir(cache_dir):
         cache_dir: The pathlib.Path object specifying cache directory.
         If set to None, caching is disabled.
     """
-    global _ctx
     _ctx[_CACHE_STR] = cache_dir
     if cache_dir is None:
         return
@@ -172,7 +169,6 @@ def _call_func(class_obj, func):
 
     Returns: The return value of the func.
     """
-    global _ctx
     if _MISS_FUNC_STR in _ctx:
         _ctx[_MISS_FUNC_STR]()
     return func(class_obj)
@@ -197,7 +193,6 @@ def cache(days):
     def decorator(func):
         @functools.wraps(func)
         def new_func(class_obj):
-            global _ctx
             if _CACHE_STR not in _ctx:
                 # Cache dir not set. Set to default.
                 set_cache_dir(_DEFAULT_DIR)
@@ -222,7 +217,6 @@ class _Prefetch:
 
     def __init__(self):
         self.cache_key_to_funcs = {}
-        global _ctx
         if _CACHE_STR not in _ctx:
             # Cache dir not set. Set to default.
             set_cache_dir(_DEFAULT_DIR)
@@ -262,7 +256,6 @@ class _Prefetch:
             for f in funcs:
                 f()
 
-        global _ctx
         # Reset cache miss func to None so it is not called from multiple
         # threads in parallel.
         cache_miss_func = None
