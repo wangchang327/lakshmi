@@ -274,9 +274,11 @@ class AssetsTest(unittest.TestCase):
             [['11/2020', '$10,000.00', '0.00%', '', '$10,172.00']],
             ibond_asset.list_bonds().str_list())
 
+    @patch('lakshmi.assets.IBonds._InterestRates.get')
     @patch('lakshmi.assets.IBonds.value')
-    def test_dict_i_bonds(self, mock_value):
+    def test_dict_i_bonds(self, mock_value, mock_get):
         mock_value.return_value = 11000
+        mock_get.return_value = None
         ibonds = assets.IBonds({'B': 1.0})
         ibonds.add_bond('02/2020', 10000)
         ibonds.what_if(-100.0)
