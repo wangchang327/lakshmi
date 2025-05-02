@@ -8,11 +8,11 @@ import datetime
 import re
 from abc import ABC, abstractmethod
 
+import curl_cffi.requests
 import ibonds
 import requests
 import yfinance
 
-import lakshmi.constants
 import lakshmi.utils as utils
 from lakshmi.cache import Cacheable, cache, prefetch_add
 from lakshmi.table import Table
@@ -451,9 +451,7 @@ class TickerAsset(TradedAsset, Cacheable):
             class2ratio: Dict of class_name -> ratio, where 0 < ratio <= 1.0
         """
         self._ticker = ticker
-        session = requests.Session()
-        session.headers['user-agent'] = (
-            f'{lakshmi.constants.NAME}/{lakshmi.constants.VERSION}')
+        session = curl_cffi.requests.Session(impersonate="chrome")
         self.yticker = yfinance.Ticker(ticker, session=session)
         super().__init__(shares, class2ratio)
 

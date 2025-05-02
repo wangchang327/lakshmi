@@ -34,6 +34,7 @@ repos:
     name: unittest
     entry: python -m unittest discover
     language: python
-    additional_dependencies: [click, ibonds, pyxirr, PyYAML, requests, tabulate, yfinance]
+    additional_dependencies: [click, curl_cffi, ibonds, pyxirr, PyYAML,
+                              requests, tabulate, yfinance]
     types: [python]
     pass_filenames: false

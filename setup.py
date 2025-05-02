@@ -32,6 +32,7 @@ setup(
     include_package_data=True,
     install_requires=[
         'click~=8.0',
+        'curl_cffi~=0.10',
         'ibonds>=1.0.2,<2.0',
         'numpy>=1.22,<3.0',
         'pyxirr~=0.6',
