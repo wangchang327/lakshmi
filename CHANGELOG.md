@@ -8,10 +8,13 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [v3.0.2] - 2025-05-01
+### Fixed
+- YFRateLimitError when fetching price data for tickers.
+
 ## [v3.0.1] - 2024-10-25
 ### Fixed
 - Fixed crash when a portfolio consists of only ManualAssets.
-
 
 ## [v3.0.0] - 2024-07-05
 ### Changed

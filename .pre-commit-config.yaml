@@ -13,12 +13,12 @@ repos:
   hooks:
   - id: seed-isort-config
 - repo: https://github.com/PyCQA/isort
-  rev: 5.13.2
+  rev: 6.0.1
   hooks:
   - id: isort
 # flake8
 - repo: https://github.com/pycqa/flake8
-  rev: 7.1.1
+  rev: 7.2.0
   hooks:
     - id: flake8
       args: # arguments to configure flake8
@@ -34,6 +34,7 @@ repos:
     name: unittest
     entry: python -m unittest discover
     language: python
-    additional_dependencies: [click, ibonds, pyxirr, PyYAML, requests, tabulate, yfinance]
+    additional_dependencies: [click, curl_cffi, ibonds, pyxirr, PyYAML,
+                              requests, tabulate, yfinance]
     types: [python]
     pass_filenames: false

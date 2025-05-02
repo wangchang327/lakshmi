@@ -268,14 +268,12 @@ def lak(refresh, config, debug):
               'https://pypi.org/project/tabulate/')
 def list(format):
     """Command to list various parts of the portfolio."""
-    global lakctx
     lakctx.tablefmt = format
 
 
 @list.command()
 def total():
     """Prints the total value of the portfolio."""
-    global lakctx
     lakctx.optional_separator()
     lakctx.warn_for_what_ifs()
     portfolio = lakctx.get_portfolio()
@@ -292,7 +290,6 @@ def al():
     """Prints the Asset Location of the portfolio. For more information,
     please see
     https://www.bogleheads.org/wiki/Tax-efficient_fund_placement"""
-    global lakctx
     lakctx.optional_separator()
     lakctx.warn_for_what_ifs()
     portfolio = lakctx.get_portfolio()
@@ -314,7 +311,6 @@ def al():
 def aa(compact, asset_class):
     """Prints the Asset Allocation of the portfolio. For more information,
     please see https://www.bogleheads.org/wiki/Asset_allocation"""
-    global lakctx
     lakctx.optional_separator()
     lakctx.warn_for_what_ifs()
 
@@ -353,7 +349,6 @@ def assets(long_name, short_name, quantity):
         raise click.ClickException(
             'Please specify at least one of long-name or short-name')
 
-    global lakctx
     lakctx.optional_separator()
     lakctx.warn_for_what_ifs()
     portfolio = lakctx.get_portfolio()
@@ -371,7 +366,6 @@ def assets(long_name, short_name, quantity):
               help='If set, aggregate the account values by account types.')
 def accounts(group):
     """Prints all the accounts in the portfolio and their current values."""
-    global lakctx
     lakctx.optional_separator()
     lakctx.warn_for_what_ifs()
     portfolio = lakctx.get_portfolio()
@@ -397,7 +391,6 @@ def whatifs(long_name, short_name, quantity):
         raise click.ClickException(
             'Please specify at least one of long-name or short-name')
 
-    global lakctx
     account_whatifs, asset_whatifs = lakctx.get_what_ifs(
         long_name=long_name, short_name=short_name, quantity=quantity,
         force=True)
@@ -424,7 +417,6 @@ def whatifs(long_name, short_name, quantity):
               '#Fine_points_about_tax_loss_harvesting for more informatoin.')
 def lots(show_account, show_term):
     """Prints tax lot information for all the assets."""
-    global lakctx
     lakctx.optional_separator()
     with Spinner():
         output = lakctx.get_portfolio().list_lots(
@@ -445,7 +437,6 @@ def lots(show_account, show_term):
               'date for which a checkpoint exists.')
 def checkpoints(begin, end):
     """Prints the portfolio's saved checkpoints."""
-    global lakctx
     lakctx.optional_separator()
     click.echo(lakctx.get_performance().get_timeline().to_table(
         begin, end).string(lakctx.tablefmt))
@@ -454,7 +445,6 @@ def checkpoints(begin, end):
 @list.command()
 def performance():
     """Prints summary stats about portfolio's performance to date."""
-    global lakctx
     lakctx.optional_separator()
     perf = lakctx.get_performance()
 
@@ -485,7 +475,6 @@ def whatif(reset):
     playing around with the hypothetical changes, you can reset them all
     by using the --reset flag."""
     if reset:
-        global lakctx
         lakctx.get_portfolio().reset_what_ifs()
         lakctx.save_portfolio()
 
@@ -499,7 +488,6 @@ def whatif(reset):
 def account(account, delta):
     """Run hypothetical what if scenario on an account.
     This command adds DELTA to the value of account specified."""
-    global lakctx
     portfolio = lakctx.get_portfolio()
     account_name = portfolio.get_account_name_by_substr(account)
     portfolio.what_if_add_cash(account_name, delta)
@@ -519,7 +507,6 @@ def account(account, delta):
 def asset(asset, account, delta):
     """Run hypothetical what if scenario on an asset.
     This command adds DELTA to the value of the asset specified."""
-    global lakctx
     portfolio = lakctx.get_portfolio()
     account_name, asset_name = portfolio.get_asset_name_by_substr(
         account if account is not None else '', asset)
@@ -538,7 +525,6 @@ def info():
               help='Print info about the account that matches this substring')
 def account(account):
     """Print details of an account."""
-    global lakctx
     lakctx.optional_separator()
 
     portfolio = lakctx.get_portfolio()
@@ -557,7 +543,6 @@ def account(account):
               'asset belongs.')
 def asset(asset, account):
     """Print details of an asset."""
-    global lakctx
     lakctx.optional_separator()
 
     portfolio = lakctx.get_portfolio()
@@ -578,7 +563,6 @@ def asset(asset, account):
               'today.')
 def performance(begin, end):
     """Print detailed stats about portfolio's performance."""
-    global lakctx
     lakctx.optional_separator()
 
     perf = lakctx.get_performance()
@@ -656,7 +640,6 @@ def edit_and_parse(edit_dict, parse_fn, filename):
 def init():
     """Initializes a new portfolio by adding asset classes. This command can
     be used to create an empty portfolio file if one doesn't exist."""
-    global lakctx
     if Path(lakctx.portfolio_filename).exists():
         raise click.ClickException(
             f'Portfolio file already exists: {lakctx.portfolio_filename}')
@@ -672,7 +655,6 @@ def init():
 @edit.command()
 def assetclass():
     """Edit the Asset classes and the desired asset allocation."""
-    global lakctx
     portfolio = lakctx.get_portfolio()
 
     asset_classes = edit_and_parse(
@@ -688,7 +670,6 @@ def assetclass():
               help='Edit the account that matches this substring')
 def account(account):
     """Edit an account in the portfolio."""
-    global lakctx
     portfolio = lakctx.get_portfolio()
 
     account_name = portfolio.get_account_name_by_substr(account)
@@ -719,7 +700,6 @@ def account(account):
               'asset belongs.')
 def asset(asset, account):
     """Edit an asset in the portfolio."""
-    global lakctx
     portfolio = lakctx.get_portfolio()
 
     account_name, asset_name = portfolio.get_asset_name_by_substr(
@@ -743,7 +723,6 @@ def asset(asset, account):
               help='Date of the checkpoint to edit.')
 def checkpoint(date):
     """Edit a protfolio's checkpoint."""
-    global lakctx
     timeline = lakctx.get_performance().get_timeline()
     orig_cp = timeline.get_checkpoint(date, interpolate=True)
     edited_cp = edit_and_parse(
@@ -764,7 +743,6 @@ def add():
 @add.command()
 def account():
     """Add a new account to the portfolio."""
-    global lakctx
     portfolio = lakctx.get_portfolio()
 
     account = edit_and_parse(None, lakshmi.Account.from_dict, 'Account.yaml')
@@ -782,7 +760,6 @@ def account():
               'account name).')
 def asset(asset_type, account):
     """Add a new asset to the portfolio."""
-    global lakctx
     portfolio = lakctx.get_portfolio()
 
     account_name = portfolio.get_account_name_by_substr(account)
@@ -803,7 +780,6 @@ def checkpoint(edit):
     """Checkpoint the current portfolio value. This creates a new checkpoint
     for today with the current portofolio value (and no cash-flows). To add
     cashflows to this checkpoint, please use the --edit flag."""
-    global lakctx
     checkpoint = _get_todays_checkpoint(lakctx.get_portfolio())
     if edit:
         checkpoint = edit_and_parse(
@@ -837,7 +813,6 @@ _PROMPT_STR = 'This operation is not reversable. Are you sure?'
 @click.confirmation_option(prompt=_PROMPT_STR)
 def account(account):
     """Delete an account from the portfolio."""
-    global lakctx
     portfolio = lakctx.get_portfolio()
     account_name = portfolio.get_account_name_by_substr(account)
     portfolio.remove_account(account_name)
@@ -855,7 +830,6 @@ def account(account):
 @click.confirmation_option(prompt=_PROMPT_STR)
 def asset(asset, account):
     """Delete an asset from the portfolio."""
-    global lakctx
     portfolio = lakctx.get_portfolio()
 
     account_name, asset_name = portfolio.get_asset_name_by_substr(
@@ -871,7 +845,6 @@ def asset(asset, account):
 @click.confirmation_option(prompt=_PROMPT_STR)
 def checkpoint(date):
     """Delete checkpoint for a given date."""
-    global lakctx
     perf = lakctx.get_performance()
     perf.get_timeline().delete_checkpoint(date)
     lakctx.save_performance()
@@ -892,7 +865,6 @@ def analyze():
               'before TLHing.')
 def tlh(max_percentage, max_dollars):
     """Shows which tax lots can be Tax-loss harvested (TLH)."""
-    global lakctx
     lakctx.optional_separator()
     with Spinner():
         table = lakshmi.analyze.TLH(max_percentage / 100, max_dollars).analyze(
@@ -914,7 +886,6 @@ def rebalance(max_abs_percentage, max_relative_percentage):
     """Shows if any asset classes need to be rebalanced based on a band
     based rebalancing scheme. For more information, please refer to
     https://www.whitecoatinvestor.com/rebalancing-the-525-rule/."""
-    global lakctx
     lakctx.optional_separator()
     portfolio = lakctx.get_portfolio()
     with Spinner():
@@ -959,7 +930,6 @@ def allocate(account, exclude_assets, rebalance):
     WARNING: This is a BETA feature and is subject to change or be removed.
     Always sanity check the suggestions before acting on them.
     """
-    global lakctx
     lakctx.optional_separator()
 
     portfolio = lakctx.get_portfolio()
