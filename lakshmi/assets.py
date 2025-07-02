@@ -510,6 +510,22 @@ class TickerAsset(TradedAsset, Cacheable):
 
         Raises: NonFoundError if the ticker is not found.
         """
+        if '.CN' in self._ticker:
+            real_ticker = self._ticker.replace('.CN', '')
+            try:
+                url = f'https://danjuanfunds.com/djapi/fund/{real_ticker}'
+                headers = {
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
+                    'Chrome/80.0.3987.149 Safari/537.36'
+                }
+                r = requests.get(url, headers=headers)
+                json_data = r.json()['data']
+                return json_data['fd_name']
+            except:
+                raise NotFoundError(
+                    f'Cannot retrieve ticker ("{self._ticker}") '
+                    'from 雪球')
+
         if self.yticker.info is None:
             raise NotFoundError(
                 f'Cannot retrieve ticker ("{self._ticker}") '
@@ -539,6 +555,22 @@ class TickerAsset(TradedAsset, Cacheable):
 
         Raises: NotFoundError if the ticker is not found.
         """
+        if '.CN' in self._ticker:
+            real_ticker = self._ticker.replace('.CN', '')
+            try:
+                url = f'https://danjuanfunds.com/djapi/fund/{real_ticker}'
+                headers = {
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
+                    'Chrome/80.0.3987.149 Safari/537.36'
+                }
+                r = requests.get(url, headers=headers)
+                json_data = r.json()['data']
+                return float(json_data['fund_derived']['unit_nav'])
+            except:
+                raise NotFoundError(
+                    f'Cannot retrieve ticker ("{self._ticker}") '
+                    'from 雪球')
+
         if self.yticker.fast_info is None:
             raise NotFoundError(
                 f'Cannot retrieve ticker ("{self._ticker}") '
