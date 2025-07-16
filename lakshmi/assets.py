@@ -545,7 +545,7 @@ class TickerAsset(TradedAsset, Cacheable):
         """Returns the short name (ticker) of this object."""
         return self._ticker
 
-    @cache(1)
+    # @cache(1)
     def price(self):
         """Returns the market price of this asset.
 
@@ -700,7 +700,7 @@ class VanguardFund(TradedAsset, Cacheable):
         """Returns the short name (fund id, string) of this object."""
         return str(self._fund_id)
 
-    @cache(1)
+    # @cache(1)
     def price(self):
         """Returns the market price of this asset.
 
